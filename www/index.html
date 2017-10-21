@@ -1,0 +1,171 @@
+﻿<!DOCTYPE html>
+<html style="width:100%;height:100%;">
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0,
+          maximum-scale=1.0, target-densitydpi=medium-dpi, user-scalable=0" />
+    <title>family memory</title>
+    <h1>
+        family memory
+    </h1>
+    <!-- NutApp references -->
+    <link href="css/index.css" rel="stylesheet" />
+    <link rel="stylesheet" href="css/reset.css">
+
+    <link rel="stylesheet" href="css/style.css">
+
+    <style>
+        h1 {
+            width: 100%;
+            height: 8%;
+            padding: 1%;
+            margin: 0px;
+            background-color: #000000;
+            color: white;
+            text-align: center;
+        }
+
+
+       
+
+        body {
+            padding: 0px;
+            margin: 0px;
+        }
+    </style>
+
+
+    <script>
+
+        localStorage.setItem("location","0");
+
+        function signIn() {
+
+            var username = document.getElementById("username").value;
+            var password = document.getElementById("password").value;
+
+
+
+
+
+            var xmlHttp = new XMLHttpRequest();
+
+            xmlHttp.onload = function () {
+                if (xmlHttp.status == 200) {
+                    var state = xmlHttp.responseText;
+                    //  alert(state);
+                    if (state == 1) {
+                      //  parent.login(username);
+                        localStorage.setItem("user", username);
+                        //parent.document.getElementById("page").src = "myProfile.html";
+
+                        parent.location.assign("/android_asset/www/main.html");     //login successfully
+                    }
+                    if (state == 2) {
+                        alert("username/password wrong");  // login failed
+                    }
+                }
+            }
+            var params = "username=" + username + "&password=" + password;
+            xmlHttp.open("POST", "http://dqlsll1234.centralus.cloudapp.azure.com/familyM/signIn.php", true);
+
+            // Set MIME type
+            xmlHttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+
+            // Send request, passing in the parameters
+            xmlHttp.send(params);
+
+        }
+
+        function signUp() {
+            // alert(1);
+            var username = document.getElementById("username").value;
+            var password = document.getElementById("password").value;
+
+            if (username == "" || password == "") {
+
+                alert("username and password can not be empty!");
+
+            }
+            else {
+                var xmlHttp = new XMLHttpRequest();
+
+                xmlHttp.onload = function () {
+                    if (xmlHttp.status == 200) {
+                        var state = xmlHttp.responseText;
+                        //alert(state);
+                        if (state == 1) {
+                            alert("sign up successfully");//state=1:sign up successful
+                        }
+                        if (state == 2) {
+                            alert("username has been used");//state=2:username has been used
+                        }
+                    }
+                }
+                var params = "username=" + username + "&password=" + password;
+                xmlHttp.open("POST", "http://dqlsll1234.centralus.cloudapp.azure.com/familyM/signUp.php", true);
+
+                // Set MIME type
+                xmlHttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+
+                // Send request, passing in the parameters
+                xmlHttp.send(params);
+            }
+        }
+
+        function onDeviceReady() {
+            // navigator.splashscreen.show();
+            document.addEventListener("backbutton", function (e) {
+                if (confirm("want to exit app?")) {
+                    navigator.app.exitApp();
+                }
+
+                else {
+
+                }
+            }, false);
+        }
+
+
+        document.addEventListener("deviceready", onDeviceReady, false);
+
+    </script>
+
+</head>
+<body style="width:98%;height:90%;">
+
+
+    <div style="width:100%;height:100%;">
+        <img style="width:100%;height:25%;margin:1%" src="images/family-home.jpg"/>
+
+        
+            <div class="page-container" align-content:center>
+              
+                <table style="align-content:center;margin:auto">
+                    <tr>  <td>  <input id="username" type="text" name="username" class="username" placeholder="Username"></td></tr>
+                    <tr><td><input id="password" type="password" name="password" class="password" placeholder="Password"></td></tr>
+                    <tr> <td> <button type="submit" onclick="signUp()">SignUp</button></td></tr>
+                    <tr> <td> <button type="submit" onclick="signIn()">Login</button></td></tr>
+                    
+                </table>
+                
+                <p style="color:#0066ff;margin-top:25px">forgot password?</p>
+            </div>
+
+       
+
+    </div>
+
+
+
+
+
+
+
+    <!-- Cordova reference, this is added to your app when it's built. -->
+
+    <script src="cordova.js"></script>
+    <script src="scripts/platformOverrides.js"></script>
+
+    <script src="scripts/index.js"></script>
+</body>
+</html>

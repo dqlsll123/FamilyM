@@ -1,0 +1,198 @@
+﻿<!DOCTYPE html>
+<html style="width:100%;height:100%;">
+<head>
+    <title></title>
+    <script src="cordova.js"></script>
+
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style>
+        button {
+            cursor: pointer;
+            width: 96%;
+            height: 44px;
+            margin-top: 5px;
+            padding: 0;
+            background: #FFA500;
+            -moz-border-radius: 6px;
+            -webkit-border-radius: 6px;
+            border-radius: 6px;
+            -moz-box-shadow: 0 15px 30px 0 rgba(255,255,255,.25) inset, 0 2px 7px 0 rgba(0,0,0,.2);
+            -webkit-box-shadow: 0 15px 30px 0 rgba(255,255,255,.25) inset, 0 2px 7px 0 rgba(0,0,0,.2);
+            box-shadow: 0 15px 30px 0 rgba(255,255,255,.25) inset, 0 2px 7px 0 rgba(0,0,0,.2);
+            font-family: 'PT Sans', Helvetica, Arial, sans-serif;
+            font-size: 12px;
+            font-weight: 700;
+            color: #fff;
+            text-shadow: 0 1px 2px rgba(0,0,0,.1);
+            -o-transition: all .2s;
+            -moz-transition: all .2s;
+            -webkit-transition: all .2s;
+            -ms-transition: all .2s;
+        }
+
+            button:hover {
+                -moz-box-shadow: 0 15px 30px 0 rgba(255,255,255,.15) inset, 0 2px 7px 0 rgba(0,0,0,.2);
+                -webkit-box-shadow: 0 15px 30px 0 rgba(255,255,255,.15) inset, 0 2px 7px 0 rgba(0,0,0,.2);
+                box-shadow: 0 15px 30px 0 rgba(255,255,255,.15) inset, 0 2px 7px 0 rgba(0,0,0,.2);
+            }
+
+            button:active {
+                -moz-box-shadow: 0 15px 30px 0 rgba(255,255,255,.15) inset, 0 2px 7px 0 rgba(0,0,0,.2);
+                -webkit-box-shadow: 0 15px 30px 0 rgba(255,255,255,.15) inset, 0 2px 7px 0 rgba(0,0,0,.2);
+                box-shadow: 0 5px 8px 0 rgba(0,0,0,.1) inset, 0 1px 4px 0 rgba(0,0,0,.1);
+                border: 0px solid #ef4300;
+            }
+
+
+        #ttitle {
+            margin-top: 0px;
+            margin-left: 0px;
+            width: 90%;
+            height: 20px;
+            -moz-border-bottom-colors: none;
+            -moz-border-left-colors: none;
+            -moz-border-right-colors: none;
+            -moz-border-top-colors: none;
+            background: none repeat scroll 0 0 rgba(0, 0, 0, 0.07);
+            border-image: none;
+            border-radius: 6px 6px 6px 6px;
+            border-style: none solid solid none;
+            border-width: medium 1px 1px medium;
+            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.12) inset;
+            color: #555555;
+            font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
+            font-size: 1em;
+            line-height: 1.4em;
+            padding: 5px 8px;
+            transition: background-color 0.2s ease 0s;
+        }
+
+        #tcontent {
+            margin-top: 0px;
+            margin-left: 0px;
+            width: 90%;
+            height: 100px;
+            -moz-border-bottom-colors: none;
+            -moz-border-left-colors: none;
+            -moz-border-right-colors: none;
+            -moz-border-top-colors: none;
+            background: none repeat scroll 0 0 rgba(0, 0, 0, 0.07);
+            border-image: none;
+            border-radius: 6px 6px 6px 6px;
+            border-style: none solid solid none;
+            border-width: medium 1px 1px medium;
+            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.12) inset;
+            color: #555555;
+            font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
+            font-size: 1em;
+            line-height: 1.4em;
+            padding: 5px 8px;
+            transition: background-color 0.2s ease 0s;
+        }
+
+        textarea:focus {
+            background: none repeat scroll 0 0 #FFFFFF;
+            outline-width: 0;
+        }
+    </style>
+    <script>
+        var imageData;
+        var fileName;
+        function upload() {
+           // alert(imageData);
+            var serverURL = "http://dqlsll123.centralus.cloudapp.azure.com/Nut_server/test.php";
+            var options = new FileUploadOptions();
+            options.fileKey = 'file';
+            var tmp = imageData.substr(imageData.lastIndexOf('/') + 1);
+            options.fileName = localStorage.getItem("user") + tmp.substr(tmp.length - 4, tmp.length) + ".jpeg";
+            fileName = options.fileName;
+            options.mimeType = "image/jpeg";
+            //var ft = new FileTransfer();
+           // alert(fileName);
+            //ft.upload(imageData,serverURL,onUploadSuccess,onUploadError,options);
+        }
+        function onUploadSuccess() {
+           // alert(1);
+        }
+        function onUploadError() {
+            alert("image upload failed!!!");
+        }
+        function func() {
+
+            navigator.camera.getPicture(onSuccess, onFail, {
+                quality: 50,
+                destinationType: Camera.DestinationType.FILE_URI,
+                sourceType:Camera.PictureSourceType.PHOTOLIBRARY
+            });
+
+        }
+        function taking() {
+            navigator.camera.getPicture(onSuccess, onFail, {
+                quality: 50,
+                destinationType: Camera.DestinationType.FILE_URI,
+                sourceType: Camera.PictureSourceType.CAMERA
+            });
+
+        }
+
+
+        function onSuccess(imageURI) {
+            var image = document.getElementById('myImage');
+            image.src = imageURI;
+            imageData = imageURI;
+
+
+
+        }
+
+        function onFail(message) {
+            alert('Failed because: ' + message);
+        }
+
+
+
+
+        function submitTopic() {
+            // alert(1);
+            var fileN = document.getElementById("myImage").src;
+            if (fileN != "") {
+                alert(fileN);
+                window.resolveLocalFileSystemURL(fileN, function (result) {
+                    alert("I'm in");
+                    result.remove(function () {
+                        alert("removed image");
+                    });
+                });
+        }
+          
+
+        }
+    
+       
+
+    </script>
+</head>
+<body style="width:100%;height:100%;">
+
+
+ 
+    <img id="myImage" style="width:35%;height:20%" />
+    <div>
+        <!--
+        <a href="#" class="btn blue" onclick="func()">select a image</a>
+
+        <a href="#" class="btn blue" onclick="submitTopic()">submit a topic</a>-->
+        <button type="submit" onclick="func()">select</button>
+        <button type="submit" onclick="submitTopic()">submit</button>
+    </div>
+    <div>
+        <button type="submit" onclick="taking()">Taking</button>
+        <button type="submit" onclick="exit()">exit</button>
+        <!--
+                <a href="#" class="btn blue" onclick="back()">back to bbs</a>
+
+                <a href="#" class="btn blue" onclick="exit()">logout and exit</a>
+        -->
+    </div>
+</body>
+</html>

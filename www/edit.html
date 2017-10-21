@@ -1,0 +1,190 @@
+﻿<!DOCTYPE html>
+<html style="width:100%;height:100%;">
+
+<head>
+   
+    <script>
+        var user = localStorage.getItem("user");
+      
+        window.onload = function () {
+            if (user == "dad") {
+                document.getElementById("head").src = "head/dad.png";
+            } else if (user == "mom") {
+                document.getElementById("head").src = "head/mom.png";
+            } else if (user == "me") {
+                document.getElementById("head").src = "head/me.png";
+            } else {
+                document.getElementById("head").src = "head/sister.png";
+            }
+
+            document.getElementById("content").src = "http://dqlsll1234.centralus.cloudapp.azure.com/familyM/edit.php?user=" + localStorage.getItem("user");
+        }
+      
+
+
+        var imageData;
+        var fileName;
+        var imageData2;
+        var fileName2;
+        function upload() {
+            // alert(imageData);
+            var serverURL = "http://dqlsll1234.centralus.cloudapp.azure.com/familyM/test.php";
+            var options = new parent.parent.FileUploadOptions();
+            options.fileKey = 'file';
+            var tmp = imageData.substr(imageData.lastIndexOf('/') + 1);
+            options.fileName = tmp;
+            fileName = options.fileName;
+            //alert(tmp);
+            options.mimeType = "image/jpeg";
+            var ft = new parent.parent.FileTransfer();
+            ft.upload(imageData, serverURL, onUploadSuccess, onUploadError, options);
+        }
+
+        function upload2() {
+            // alert(imageData);
+            var serverURL = "http://dqlsll1234.centralus.cloudapp.azure.com/familyM/test.php";
+            var options = new parent.parent.FileUploadOptions();
+            options.fileKey = 'file';
+            var tmp = imageData2.substr(imageData2.lastIndexOf('/') + 1);
+            //  options.fileName = localStorage.getItem("user") + tmp.substr(tmp.length - 4, tmp.length) + ".jpeg";
+            options.fileName = tmp;
+            fileName2 = options.fileName;
+            options.mimeType = "image/jpeg";
+            var ft = new parent.parent.FileTransfer();
+           // alert(tmp);
+            ft.upload(imageData2, serverURL, onUploadSuccess, onUploadError, options);
+        }
+        function onUploadSuccess() {
+            //alert(fileName);
+        }
+        function onUploadError() {
+            alert("image upload failed!!!");
+        }
+        function selectImg() {
+
+            parent.parent.navigator.camera.getPicture(onSuccess1, onFail, {
+                correctOrientation: true,
+                quality: 50,
+                destinationType: parent.parent.Camera.DestinationType.FILE_URI,
+                sourceType: parent.parent.Camera.PictureSourceType.PHOTOLIBRARY
+            });
+
+        }
+        function onSuccess1(imageURI) {
+            var image = document.getElementById('image');
+            image.src = imageURI;
+            imageData = imageURI;
+        }
+
+            function onFail(message) {
+                alert('Failed because: ' + message);
+            }
+
+            function selectVideo() {
+
+                parent.parent.navigator.camera.getPicture(onSuccess2, onFail, {
+                    correctOrientation: true,
+                    quality: 50,
+                    destinationType: parent.parent.Camera.DestinationType.FILE_URI,
+                    sourceType: parent.parent.Camera.PictureSourceType.PHOTOLIBRARY
+                });
+
+            }
+        
+        function onSuccess2(imageURI) {
+            var image = document.getElementById('video');
+            image.src = imageURI;
+            imageData2 = imageURI;
+        }
+
+
+
+        function submitTopic() {
+            // alert(1);
+            var fileN1 = document.getElementById("image").src;
+            var fileN2 = document.getElementById("video").src;
+            if (fileN1 != "") {
+                //alert(fileN);
+                upload();
+            } if (fileN2 != "") {
+                //alert(fileN);
+                upload2();
+            }
+           // var ttitle = document.getElementById("ttitle").value;
+            // alert(ttitle);
+            
+            var status = document.getElementById("status").value;
+            var getPublic = document.getElementById("isPublic").value;
+            var isPublic;
+            if (getPublic == "public") {
+                isPublic = 1;
+            } else {
+                isPublic = 2;
+            }
+            //alert(tcontent);
+          //  var tsid = 1;
+            //alert(tsid);
+            //var password = document.getElementById("password").value;
+            var xmlHttp = new XMLHttpRequest();
+
+            xmlHttp.onload = function () {
+                if (xmlHttp.status == 200) {
+                    var state = xmlHttp.responseText;
+                    //  alert(state);
+                    if (state == 1) {
+                        alert("submit successful");
+                        // parent.login(username);
+                        // location.assign("/android_asset/www/myProfile.html?username=" + username);     //login successfully
+                    }
+                    if (state == 2) {
+                        alert("sumbit failed!");  // login failed
+                    }
+                }
+            }
+            var params = "mcontent=" + status + "&uname=" + user + "&isPublic=" + isPublic +
+                "&img=" + fileName + "&video=" + fileName2;
+
+            // var params = "tsid=" + tsid + "&ttitle=" + ttitle +
+            //"&tcontent=" + tcontent + "&username=" + parent.user + "&imageName="+;
+            xmlHttp.open("POST", "http://dqlsll1234.centralus.cloudapp.azure.com/familyM/submitMemory.php", true);
+
+            // Set MIME type
+            xmlHttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+
+            // Send request, passing in the parameters
+            xmlHttp.send(params);
+            
+        }
+
+
+    </script>
+
+</head>
+<body style="width:100%;height:100%;margin:0px;background-color:#ebebe0">
+
+
+    <div style="width:100%;height:20%;margin-top:1px;background-color:#ebebe0;font-family: 'PT Sans', Helvetica, Arial, sans-serif;vertical-align:middle">
+        <div style="width:20%;height:60%;float:right">
+            <img id="head" style="width:100%;height:100%" src="" />
+        </div>
+        <div style="width:80%;height:60%; position: relative;">
+            <input style="width:95%;height:60%;position: absolute;bottom: 0;" id="status" type="text" name="username" class="username" placeholder="Status">
+
+        </div>
+        <div style="width:100%;height:40%">
+
+            <img id="image" onclick="selectImg()" style="width:10%;height:80%;margin-top:1%;margin-left:1%" src="button/image.jpg" />
+            <img id="video" onclick="selectVideo()" style="width:10%;height:80%;margin-top:1%;margin-left:1%" src="button/video.jpg" />
+           <button style="width:20%;float:right;height:80%;margin-top:1%;margin-left:1%" onclick="submitTopic()">submit</button>
+            <select style="float:right;margin-top:1%;height:80%;width:30%" id="isPublic">
+                <option value="public">public</option>
+                <option value="private">private</option>
+            </select>
+        </div>
+        </div>
+
+
+        <iframe id="content" style="width:100%;height:80%;margin:0px" src=""></iframe>
+   
+</body>
+</html>

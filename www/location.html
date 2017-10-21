@@ -1,0 +1,126 @@
+﻿<!DOCTYPE html>
+<html style="width:100%;height:100%">
+
+<body style="width:100%;height:100%;margin:0px;padding:0px">
+
+   
+
+    <div id="map" style="width:100%;height:100%"></div>
+    
+    <script src="http://maps.googleapis.com/maps/api/js?key=AIzaSyDg3YyZiBcIAHxu4Z2rUDYS9WflTMctkaA"></script>
+    <script>
+        var map;
+        function myMap(array) {
+            var mapCanvas = document.getElementById("map");
+            var myCenter1 = new google.maps.LatLng(array[0], array[1]);
+            var myCenter2 = new google.maps.LatLng(array[2], array[3]);
+            var myCenter3 = new google.maps.LatLng(array[4], array[5]);
+            var myCenter4 = new google.maps.LatLng(array[6], array[7]);
+            var mapOptions = { center: myCenter4, zoom: 12 };
+            map = new google.maps.Map(mapCanvas, mapOptions);
+            var marker1 = new google.maps.Marker({
+                position: myCenter1,
+                icon: "head/dadmap.png"
+            });
+            marker1.setMap(map);
+            var marker2 = new google.maps.Marker({
+                position: myCenter2,
+                icon: "head/mommap.png"
+            });
+            marker2.setMap(map);
+            var marker3 = new google.maps.Marker({
+                position: myCenter3,
+                icon: "head/sistermap.png"
+            });
+            marker3.setMap(map);
+            var marker4 = new google.maps.Marker({
+                position: myCenter4,
+                icon: "head/memap.png"
+            });
+            marker4.setMap(map);
+        }
+        
+
+
+
+        function getLocation(){
+       
+        var state;
+  
+        var xmlHttp = new XMLHttpRequest();
+
+        xmlHttp.onload = function () {
+        if (xmlHttp.status == 200) {
+            state = xmlHttp.responseText;
+            var myArr = JSON.parse(state);
+            //alert(myArr[3]);
+              myMap(myArr);
+           
+        }
+    }
+    var params = "";
+ 
+    xmlHttp.open("POST", "http://dqlsll1234.centralus.cloudapp.azure.com/familyM/getLocations.php", true);
+
+    // Set MIME type
+    xmlHttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+
+    xmlHttp.send(params);
+  
+        }
+
+
+
+        var onSuccess = function (position) {
+           // alert('Latitude: ' + position.coords.latitude + '\n' +
+            //      'Longitude: ' + position.coords.longitude + '\n');
+            success(position.coords.latitude, position.coords.longitude);
+        };
+
+        function success(a, b) {
+           // alert(a);
+            var user = localStorage.getItem("user");
+            var xmlHttp = new XMLHttpRequest();
+
+            xmlHttp.onload = function () {
+                if (xmlHttp.status == 200) {
+                    var state = xmlHttp.responseText;
+                   
+                    if (state == 1) {
+                        getLocation();
+                    }
+                    if (state == 2) {
+                      
+                    }
+                }
+            }
+            var params = "user=" + user + "&lat=" + a + "&lng=" + b ;
+
+           
+            xmlHttp.open("POST", "http://dqlsll1234.centralus.cloudapp.azure.com/familyM/updateLocation.php", true);
+
+            // Set MIME type
+            xmlHttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+
+            // Send request, passing in the parameters
+            xmlHttp.send(params);
+          
+
+        }
+
+        // onError Callback receives a PositionError object
+        //
+        function onError(error) {
+            alert('code: ' + error.code + '\n' +
+                  'message: ' + error.message + '\n');
+        }
+        if(localStorage.getItem("location")==1){
+        navigator.geolocation.getCurrentPosition(onSuccess, onError);
+        }
+    </script>
+   
+    
+
+    
+</body>
+</html>

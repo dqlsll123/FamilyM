@@ -1,0 +1,66 @@
+﻿<!DOCTYPE html>
+<html style="width:100%;height:100%;">
+
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+  
+    <style>
+        .mySlides {
+            display: none;
+        }
+    </style>
+</head>
+<body style="width:100%;height:100%;margin:0px;background-color:#ebebe0">
+
+
+    <div class="w3-content w3-section">
+        <img class="mySlides" src="images/memory1.1.png" style="width:100%">
+        <img class="mySlides" src="images/memory2.1.png" style="width:100%">
+        <img class="mySlides" src="images/memory3.1.png" style="width:100%">
+    </div>
+    <div id="content">
+
+   
+    </div>
+
+    <script>
+var myIndex = 0;
+carousel();
+
+function carousel() {
+    var i;
+    var x = document.getElementsByClassName("mySlides");
+    for (i = 0; i < x.length; i++) {
+       x[i].style.display = "none";
+    }
+    myIndex++;
+    if (myIndex > x.length) {myIndex = 1}
+    x[myIndex-1].style.display = "block";
+    setTimeout(carousel, 2000); // Change image every 2 seconds
+}
+
+var xmlHttp = new XMLHttpRequest();
+
+xmlHttp.onload = function () {
+    if (xmlHttp.status == 200) {
+        var state = xmlHttp.responseText;
+          alert(state);
+          document.getElementById("content").innerHTML = state;
+        //var list = document.getElementById("list");
+       // $("#content").append(state);
+       // $("#list").listview("refresh");
+    }
+}
+//  alert(parent.parent.user);
+xmlHttp.open("POST", "http://dqlsll1234.centralus.cloudapp.azure.com/familyM/posts.php?user=" + localStorage.getItem("user"), true);
+
+// Set MIME type
+xmlHttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+
+// Send request, passing in the parameters
+xmlHttp.send();
+
+    </script>
+
+</body>
+</html>
